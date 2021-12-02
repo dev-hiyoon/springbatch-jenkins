@@ -11,6 +11,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -41,7 +42,7 @@ public class StatisticBatchConfiguration {
         log.info("################## statisticStep started!");
         return stepBuilderFactory.get("statisticStep")
                 .<People, Statistic>chunk(chunkSize)
-                .reader(reader())
+                .reader(reader(null))
                 .processor(processor())
                 .writer(writer())
                 .build();
@@ -49,11 +50,11 @@ public class StatisticBatchConfiguration {
 
     @Bean
     @StepScope
-    public JpaPagingItemReader<People> reader() {
-        log.info("################## reader started!");
+    public JpaPagingItemReader<People> reader(@Value("#{jobParameters['date']}") String date) {
+        log.info("################## reader started! date: {}", date);
         return new JpaPagingItemReaderBuilder<People>()
                 .name("statisticItemReader")
-                .queryString("SELECT p FROM People p")
+                .queryString("SELECT p FROM People p WHERE date = '" +  date + "'")
                 .pageSize(pageSize)
                 .entityManagerFactory(entityManagerFactory)
                 .build();
