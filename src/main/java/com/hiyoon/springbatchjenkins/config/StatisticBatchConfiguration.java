@@ -3,6 +3,7 @@ package com.hiyoon.springbatchjenkins.config;
 import com.hiyoon.springbatchjenkins.entity.People;
 import com.hiyoon.springbatchjenkins.entity.Statistic;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.*;
@@ -15,8 +16,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.EntityManagerFactory;
 
+@Slf4j
 @Configuration
-@EnableBatchProcessing
 @RequiredArgsConstructor
 public class StatisticBatchConfiguration {
 
@@ -28,6 +29,7 @@ public class StatisticBatchConfiguration {
 
     @Bean
     public Job statisticJob() {
+        log.info("################## statisticJob started!");
         return jobBuilderFactory.get("statisticJob")
                 .start(statisticStep())
                 .build();
@@ -36,6 +38,7 @@ public class StatisticBatchConfiguration {
     @Bean
     @JobScope
     public Step statisticStep() {
+        log.info("################## statisticStep started!");
         return stepBuilderFactory.get("statisticStep")
                 .<People, Statistic>chunk(chunkSize)
                 .reader(reader())
@@ -47,9 +50,10 @@ public class StatisticBatchConfiguration {
     @Bean
     @StepScope
     public JpaPagingItemReader<People> reader() {
+        log.info("################## reader started!");
         return new JpaPagingItemReaderBuilder<People>()
                 .name("statisticItemReader")
-                .queryString("SELECT p FROM people p")
+                .queryString("SELECT p FROM People p")
                 .pageSize(pageSize)
                 .entityManagerFactory(entityManagerFactory)
                 .build();
@@ -64,6 +68,7 @@ public class StatisticBatchConfiguration {
     @Bean
     @StepScope
     public JpaItemWriter<Statistic> writer() {
+        log.info("################## writer started!");
         JpaItemWriter<Statistic> writer = new JpaItemWriter<>();
         writer.setEntityManagerFactory(entityManagerFactory);
         return writer;
