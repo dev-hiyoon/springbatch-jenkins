@@ -34,7 +34,7 @@ CREATE TABLE `statistic`
     `person_id`            bigint(20) DEFAULT NULL,
     `total_payment_amount` bigint(20) DEFAULT NULL,
     `total_payment_count`  bigint(20) DEFAULT NULL,
-    PRIMARY KEY (`date`)
+    PRIMARY KEY (`date`,`person_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
@@ -55,5 +55,11 @@ INSERT INTO payment(`date`, person_id, payment_amount, reg_date)
 VALUES ('20211130', 0, 1500, now());
 INSERT INTO payment(`date`, person_id, payment_amount, reg_date)
 VALUES ('20211130', 1, 500, now());
+
+```
+
+```shell
+java -jar .\springbatch-jenkins-0.0.1-SNAPSHOT.jar date=20211203 --job.name=statisticInitBatchJob version=0.4
+java -jar .\springbatch-jenkins-0.0.1-SNAPSHOT.jar date=20211203 --job.name=statisticJob version=0.4
 
 ```

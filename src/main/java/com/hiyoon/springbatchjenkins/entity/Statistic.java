@@ -4,32 +4,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.time.LocalDate;
+import javax.persistence.*;
 import java.util.Objects;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Entity
+@IdClass(StatisticPK.class)
 public class Statistic {
     private String date;
     private long personId;
-    private long totalPaymentAmount;
-    private long totalPaymentCount;
+    private Long totalPaymentAmount;
+    private Long totalPaymentCount;
 
-    public Statistic(People people) {
-        this.date = LocalDate.now().toString();
-        this.personId = people.getPersonId();
-        this.totalPaymentAmount = 0;
-        this.totalPaymentCount = 0;
+    public Statistic(Payment payment) {
+        this.date = payment.getDate();
+        this.personId = payment.getPersonId();
+        this.totalPaymentAmount = payment.getPaymentAmount();
     }
 
     @Id
-    @Basic
     @Column(name = "date")
     public String getDate() {
         return date;
@@ -39,7 +34,7 @@ public class Statistic {
         this.date = date;
     }
 
-    @Basic
+    @Id
     @Column(name = "person_id")
     public long getPersonId() {
         return personId;
@@ -51,21 +46,21 @@ public class Statistic {
 
     @Basic
     @Column(name = "total_payment_amount")
-    public long getTotalPaymentAmount() {
+    public Long getTotalPaymentAmount() {
         return totalPaymentAmount;
     }
 
-    public void setTotalPaymentAmount(long totalPaymentAmount) {
+    public void setTotalPaymentAmount(Long totalPaymentAmount) {
         this.totalPaymentAmount = totalPaymentAmount;
     }
 
     @Basic
     @Column(name = "total_payment_count")
-    public long getTotalPaymentCount() {
+    public Long getTotalPaymentCount() {
         return totalPaymentCount;
     }
 
-    public void setTotalPaymentCount(long totalPaymentCount) {
+    public void setTotalPaymentCount(Long totalPaymentCount) {
         this.totalPaymentCount = totalPaymentCount;
     }
 
@@ -74,7 +69,7 @@ public class Statistic {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Statistic statistic = (Statistic) o;
-        return personId == statistic.personId && totalPaymentAmount == statistic.totalPaymentAmount && totalPaymentCount == statistic.totalPaymentCount && Objects.equals(date, statistic.date);
+        return personId == statistic.personId && Objects.equals(date, statistic.date) && Objects.equals(totalPaymentAmount, statistic.totalPaymentAmount) && Objects.equals(totalPaymentCount, statistic.totalPaymentCount);
     }
 
     @Override
