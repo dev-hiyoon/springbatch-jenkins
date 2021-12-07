@@ -1,4 +1,6 @@
-```sql
+
+## DB
+```mariadb
 
 -- DROP
 DROP
@@ -58,8 +60,15 @@ VALUES ('20211130', 1, 500, now());
 
 ```
 
+## Spring batch
 ```shell
 java -jar .\springbatch-jenkins-0.0.1-SNAPSHOT.jar date=20211203 --job.name=statisticInitBatchJob version=0.4
 java -jar .\springbatch-jenkins-0.0.1-SNAPSHOT.jar date=20211203 --job.name=statisticJob version=0.4
 
+```
+## Jenkins
+
+```shell
+docker run --network mariadb-network --name=springbatchapp jenkins/spring-batch --job.name=statisticInitBatchJob date=21211207 ver=1.5
+docker run --network mariadb-network --name=springbatchapp jenkins/spring-batch --job.name=statisticBatchJob date=21211207 ver=1.5
 ```
