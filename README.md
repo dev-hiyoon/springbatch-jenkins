@@ -66,9 +66,37 @@ java -jar .\springbatch-jenkins-0.0.1-SNAPSHOT.jar date=20211203 --job.name=stat
 java -jar .\springbatch-jenkins-0.0.1-SNAPSHOT.jar date=20211203 --job.name=statisticJob version=0.4
 
 ```
-## Jenkins
+## Docker
 
 ```shell
 docker run --network mariadb-network --name=springbatchapp jenkins/spring-batch --job.name=statisticInitBatchJob date=21211207 ver=1.5
 docker run --network mariadb-network --name=springbatchapp jenkins/spring-batch --job.name=statisticBatchJob date=21211207 ver=1.5
+```
+
+
+## Jenkins
+
+아래는 수정 필요 매번 clear 필요 없음.
+일단 테스트로.
+
+```groovy
+node {
+    
+    stage 'clear StatisticInitBatchJob'
+    echo 'clear StatisticInitBatchJob'
+    sh "docker rm springbatchapp"
+    
+    stage 'StatisticInitBatchJob'
+    echo 'StatisticInitBatchJob'
+    sh "docker run --network mariadb-network --name=springbatchapp jenkins/spring-batch --job.name=statisticInitBatchJob date=21211207 ver=1.6"
+    
+    stage 'clear StatisticBatchJob'
+    echo 'clear StatisticBatchJob'
+    sh "docker rm springbatchapp"
+    
+    stage 'StatisticBatchJob'
+    echo 'StatisticBatchJob'
+    sh "docker run --network mariadb-network --name=springbatchapp jenkins/spring-batch --job.name=statisticBatchJob date=21211207 ver=1.6"
+    
+}
 ```
