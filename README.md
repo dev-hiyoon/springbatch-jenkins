@@ -1,3 +1,8 @@
+## Scenario
+
+1. 스프링 배치를 github에 올립니다.
+2. jenkins에서 docker image로 빌드합니다.
+3. jenkins pipeline에서 job을 스케줄링합니다.
 
 ## DB
 ```mariadb
